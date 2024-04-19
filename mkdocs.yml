@@ -1,0 +1,88 @@
+site_name: Matt's Hackery
+site_url: https://laidbackware.github.io
+# Copyright
+copyright: 'Copyright &copy; 2024 Matt Proud'
+repo_name: 'laidbackware/laidbackware.github.io'
+repo_url: 'https://github.com/laidbackware/laidbackware.github.io'
+
+docs_dir: 'docs'
+
+nav:
+- Home: index.md
+- Kubernetes: 
+  - vSphere with Tanzu (TKGS):
+    - Get full admin access: k8s/tkgs/admin-access.md
+    - Set default PSA: k8s/tkgs/set-default-psa.md
+    - Update the control plane disks: k8s/tkgs/update-cp-disks.md
+  - Demo Apps:
+      Minimal web app + LB: k8s/apps/minmal-lb.md
+
+theme:
+  features:
+    - navigation.tabs
+    - navigation.instant
+    - navigation.tabs.sticky
+    - content.code.annotate
+    - content.code.copy
+    - toc.follow
+  name: material
+  palette:
+    primary: cyan
+  
+  font:
+    text: 'Roboto'
+    code: 'JetBrains Mono'
+
+plugins:
+  - tags
+  # - git-revision-date-localized:
+  #     type: iso_datetime
+  - search
+  - minify:
+      minify_html: true
+
+extra:
+  analytics:
+    provider: google
+    property: G-F2EF959YF2
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: https://github.com/ladibackware
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/matt-proud
+
+# Extensions
+markdown_extensions:
+  - abbr
+  - footnotes
+  - admonition
+  - meta
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.critic
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true 
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
