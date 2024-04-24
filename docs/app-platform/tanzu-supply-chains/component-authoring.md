@@ -2,11 +2,11 @@
 
 Engineering a component requires thinking in layers. 
 
-- At the bottom most layer you have the step within the Tekton task, which is a shell script. It's recommende to write the script in such a way that it can be executed and tested in isolation without the extra overhead of Tekton. 
+- At the bottom most layer you have the step within the Tekton task, which is a shell script. It's recommended to write the script in such a way that it can be executed and tested in isolation without the extra overhead of Tekton. 
 - Once the script is running then the Tekton wrapper can be place around it and it can be tested with a pipeline run.
 - Once the pipeline run completes successfully it can be wrapped in a component.
 
-The instructions belew detail the steps needed to build up these layers to create a stateful set based upon the pod spec output of the conventions server.
+The instructions below detail the steps needed to build up these layers to create a simple stateful set based upon the pod spec output of the conventions server.
 
 **Warning** this tutorial uses ytt overlays, so you may want to check out some tutorials on that before continuing.
 
@@ -84,7 +84,7 @@ ${SCRIPT_DIR}/task-script.sh
 
 ### Task script
 
-The task script expects 3 environment variables, which were set by the wrapper. `WORKSPACE_YAML` and `WORKSPACE_YTT` represent the workspace paths and `WORKLOAD_NAME` is needed to substitute into the yaml.
+The task script expects 3 environment variables, which were set by the wrapper. `WORKSPACE_YAML` and `WORKSPACE_YTT` represent the workspace paths and `WORKLOAD_NAME` is needed to substitute into the yaml. By make these environment variables it means that the script can be Tekton agnostic and enables running/testing outside Tekton.
 
 `web-template-values.yaml` and `web-template-overlays.yaml` are rendered using Bash to inject the workload name.
 
