@@ -9,6 +9,12 @@ docs_dir: 'docs'
 
 nav:
 - Home: index.md
+- App Platform:
+  - Tanzu Supply Chains:
+    - Supply chain architecture: app-platform/tanzu-supply-chains/supply-chain-architecture.md
+    - Component architecture: app-platform/tanzu-supply-chains/component-architecture.md
+    - Hello Component: app-platform/tanzu-supply-chains/hello-component.md
+    - Component authoring: app-platform/tanzu-supply-chains/component-authoring.md
 - Kubernetes: 
   - vSphere with Tanzu (TKGS):
     - Get full admin access: k8s/tkgs/admin-access.md
