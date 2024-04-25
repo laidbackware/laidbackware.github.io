@@ -23,6 +23,8 @@ nav:
     - Bootstrap Troubleshooting: k8s/tkgs/troubleshooting.md
   - Demo Apps:
       Minimal web app + LB: k8s/apps/minimal-lb.md
+- Shell:
+    Bash recipes: shell/bash-recipes.md
 
 theme:
   features:

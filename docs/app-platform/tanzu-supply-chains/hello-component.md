@@ -1,4 +1,4 @@
-# Minimal Component Example
+# Tanzu Supply Chains Minimal Component Example
 
 The example below is a hello world component that does not have any input/outputs, only a single variable to print inside the container.
 

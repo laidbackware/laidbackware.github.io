@@ -1,4 +1,4 @@
-# Component Architecture
+# Tanzu Supply Chains Component Architecture
 
 A Component defines the API spec that is passed up to the supply chain, the Tekton pipeline run spec, inputs and outputs.
 
