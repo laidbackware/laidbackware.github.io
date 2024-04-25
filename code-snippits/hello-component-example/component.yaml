@@ -1,0 +1,60 @@
+---
+apiVersion: supply-chain.apps.tanzu.vmware.com/v1alpha1
+kind: Component
+metadata:
+  labels:
+    supply-chain.apps.tanzu.vmware.com/catalog: hello-component
+  name: hello-0.0.1
+spec:
+  config:
+  - path: spec.who-dis
+    schema:
+      description: |
+        String input to be printed after "Hello "
+      type: string
+  description: Outputs hello <who-dis>
+  pipelineRun:
+    params:
+    - name: who-dis
+      value: $(workload.spec.who-dis)
+    pipelineRef:
+      name: hello-pipeline
+    taskRunTemplate:
+      podTemplate:
+        securityContext:
+          fsGroup: 1000
+          runAsGroup: 1000
+          runAsUser: 1001
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: hello-pipeline
+spec:
+  params:
+  - description: Input string
+    name: who-dis
+    type: string
+  tasks:
+    - name: hello-there
+      params:
+      - name: who-dis
+        value: $(params.who-dis)
+      taskRef:
+        name: hello-task
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: hello-task
+spec:
+  params:
+  - name: who-dis
+    type: string
+  steps:
+    - name: echo
+      image: alpine
+      script: |
+        #!/bin/sh
+        set -e
+        echo "Hello $(params.who-dis)"

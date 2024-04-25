@@ -1,0 +1,14 @@
+apiVersion: supply-chain.apps.tanzu.vmware.com/v1alpha1
+kind: SupplyChain
+metadata:
+  name: hello.example.tanzu-0.0.1
+spec:
+  defines: # Describes the workload
+    kind: HelloApp
+    plural: helloapps
+    group: example.tanzu
+    version: v1alpha1
+  stages: # Describes the stages
+    - name: hello
+      componentRef: # References the components
+        name: hello-0.0.1

@@ -1,0 +1,6 @@
+apiVersion: example.tanzu/v1alpha1
+kind: HelloApp
+metadata:
+  name: hello-fred
+spec:
+  who-dis: fred

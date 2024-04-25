@@ -12,6 +12,8 @@ The instructions below detail the steps needed to build up these layers to creat
 
 This example uses simple shell scripts tested on Linux.
 
+The raw yaml and scripts below can be found [here](./component-authoring-example/).
+
 ## Inputs and outputs
 
 The component will expect an input of the pod spec, which is an output from the convention server. An input from the convention server will contain a single file in the root of the workspace called `app-config.yaml`. Below is an abbreviated pod spec, with the 2 sections that will be reused.
