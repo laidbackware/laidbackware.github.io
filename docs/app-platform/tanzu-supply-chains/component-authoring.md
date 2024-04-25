@@ -12,7 +12,7 @@ The instructions below detail the steps needed to build up these layers to creat
 
 This example uses simple shell scripts tested on Linux.
 
-The raw yaml and scripts below can be found [here](./component-authoring-example/).
+The raw yaml and scripts below can be found [here](https://github.com/laidbackware/laidbackware.github.io/tree/main/code-snippits/component-authoring-example).
 
 ## Inputs and outputs
 
