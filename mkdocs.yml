@@ -20,8 +20,9 @@ nav:
     - Get full admin access: k8s/tkgs/admin-access.md
     - Set default PSA: k8s/tkgs/set-default-psa.md
     - Update the control plane disks: k8s/tkgs/update-cp-disks.md
+    - Bootstrap Troubleshooting: k8s/tkgs/troubleshooting.md
   - Demo Apps:
-      Minimal web app + LB: k8s/apps/minmal-lb.md
+      Minimal web app + LB: k8s/apps/minimal-lb.md
 
 theme:
   features:
