@@ -4,7 +4,33 @@ A Component defines the API spec that is passed up to the supply chain, the Tekt
 
 See [hello-component](./hello-component.md) for a basic example of a component.
 
-### Inputs and Outputs
+
+## Variables
+
+If a component requires variable as inputs, their schema is defined under the component spec as shown below.
+
+```yaml
+apiVersion: supply-chain.apps.tanzu.vmware.com/v1alpha1
+kind: Component
+...
+spec:
+  config:
+  - path: spec.who-dis
+    schema:
+      type: object
+      properties:
+        name:
+          type: string
+          description: String input to be printed after "Hello "
+          example: bob
+      required:
+        - name
+```
+
+When a supply chain is applied into the cluster all components schemas are aggregated together to form the API of the workload.
+
+
+## Inputs and Outputs
 
 Tekton by design does not pass not pass data between workspace spaces and a workspace should be bound to a pipeline run. To get around this Tanzu Supply Chains use the container registry for inter-pipeline storage. If a component needs to store data to pass on to another component it needs to contain a system task that pushes the contents of a workspace to the container registry.
 
@@ -132,3 +158,40 @@ spec:
       runAfter:
         - fetch-yaml
 ```
+
+
+## PipelineRun
+
+This section of the API partially replicates the Tekton [PipelineRun](https://tekton.dev/docs/pipelines/pipelineruns/) API.
+
+The example below taken from the `deloyer` OOB component takes variables from the input, calls the `deployer` pipeline by name, sets the UIDs and GIDs for the tasks and sets the workspace to use a dynamically created persistent volume.
+
+```yaml
+apiVersion: supply-chain.apps.tanzu.vmware.com/v1alpha1
+kind: Component
+...
+  pipelineRun:
+    params:
+      - name: oci-image-with-yaml
+        value: $(inputs.package.url)
+      ...
+    pipelineRef:
+      name: deployer
+    taskRunTemplate:
+      podTemplate:
+        securityContext:
+          fsGroup: 1000
+          runAsGroup: 1000
+          runAsUser: 1001
+    workspaces:
+      - name: shared-data
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
+```
+
+When the stage is created it will create a PipelineRun from the template above.

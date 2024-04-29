@@ -23,14 +23,19 @@ spec:
   config:
   - path: spec.who-dis
     schema:
-      description: |
-        String input to be printed after "Hello "
-      type: string
+      type: object
+      properties:
+        name:
+          type: string
+          description: String input to be printed after "Hello "
+          example: bob
+      required:
+        - name
   description: Outputs hello <who-dis>
   pipelineRun:
     params:
     - name: who-dis
-      value: $(workload.spec.who-dis)
+      value: $(workload.spec.who-dis.name)
     pipelineRef:
       name: hello-pipeline
     taskRunTemplate:
@@ -110,6 +115,13 @@ kubectl get supplychain hello.example.tanzu-0.0.1
 
 ## Workload Spec
 
+The spec of a workload can be generated using the following command.
+
+```sh
+tanzu workload generate <planned worklaod name> -k <spec.defines.plural>.<spec.defines.group>
+tanzu workload generate hello-fred -k helloapps.example.tanzu
+```
+
 The following yaml creates a workload against the supply chain:
 
 `workload.yaml`
@@ -119,8 +131,10 @@ kind: HelloApp
 metadata:
   name: hello-fred
 spec:
-  who-dis: fred
+  who-dis:
+    name: fred
 ```
+
 
 ## Running the workload
 

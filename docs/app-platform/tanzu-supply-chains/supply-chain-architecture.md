@@ -10,10 +10,11 @@ If functionality is needed beyond the OOB components, then you will need to crea
 
 ## Declarative API and Versioning
 
+The main difference in user experience when compared to Cartographer is that platform engineers expose a fixed API for each workload type based on the components in the supply chain. As a developer I have no way to modify the supply chain beyond what is provided, like what was possible with `ytt` overlays in Cartographer.
 
+Each workload is versioned using standard K8s resource versioning, meaning that a platform engineer can release newer versions with API breaking changes without impacting existing workloads and give app owners the ability to move between versions.
 
-### Variables and Types
-
+See the [Component Architecture doc](./component-architecture.md#variables) for how variables are managed.
 
 ## Separation of Concerns
 
@@ -21,5 +22,5 @@ Components are designed to be single function and modular, meaning that as the c
 
 ## Inputs and Outputs
 
-See the [Component Architecture](./component-architecture.md) section for a detailed description.
+See the [Component Architecture doc](./component-architecture.md#inputs-and-outputs) for a detailed description.
 
