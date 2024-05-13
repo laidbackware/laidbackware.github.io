@@ -2,62 +2,67 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://laidbackware.github.io/</loc>
-         <lastmod>2024-05-02</lastmod>
+         <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laidbackware.github.io/app-platform/tanzu-supply-chains/component-architecture/</loc>
-         <lastmod>2024-05-02</lastmod>
+         <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laidbackware.github.io/app-platform/tanzu-supply-chains/component-authoring/</loc>
-         <lastmod>2024-05-02</lastmod>
+         <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laidbackware.github.io/app-platform/tanzu-supply-chains/hello-component/</loc>
-         <lastmod>2024-05-02</lastmod>
+         <lastmod>2024-05-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://laidbackware.github.io/app-platform/tanzu-supply-chains/private-ca-hack/</loc>
+         <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laidbackware.github.io/app-platform/tanzu-supply-chains/supply-chain-architecture/</loc>
-         <lastmod>2024-05-02</lastmod>
+         <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laidbackware.github.io/k8s/apps/minimal-lb/</loc>
-         <lastmod>2024-05-02</lastmod>
+         <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laidbackware.github.io/k8s/tkgs/admin-access/</loc>
-         <lastmod>2024-05-02</lastmod>
+         <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laidbackware.github.io/k8s/tkgs/repave-on-7/</loc>
-         <lastmod>2024-05-02</lastmod>
+         <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laidbackware.github.io/k8s/tkgs/set-default-psa/</loc>
-         <lastmod>2024-05-02</lastmod>
+         <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laidbackware.github.io/k8s/tkgs/troubleshooting/</loc>
-         <lastmod>2024-05-02</lastmod>
+         <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laidbackware.github.io/k8s/tkgs/update-cp-disks/</loc>
-         <lastmod>2024-05-02</lastmod>
+         <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://laidbackware.github.io/shell/bash-recipes/</loc>
-         <lastmod>2024-05-02</lastmod>
+         <lastmod>2024-05-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
