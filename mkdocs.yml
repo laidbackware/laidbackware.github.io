@@ -15,6 +15,7 @@ nav:
     - Component architecture: app-platform/tanzu-supply-chains/component-architecture.md
     - Hello Component: app-platform/tanzu-supply-chains/hello-component.md
     - Component authoring: app-platform/tanzu-supply-chains/component-authoring.md
+    - Private CA Hack: app-platform/tanzu-supply-chains/private-ca-hack.md
 - Kubernetes: 
   - vSphere with Tanzu (TKGS):
     - Get full admin access: k8s/tkgs/admin-access.md
