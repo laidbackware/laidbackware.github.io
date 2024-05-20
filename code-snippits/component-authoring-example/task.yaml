@@ -9,11 +9,9 @@ spec:
     description: Name of the Workload. Used as a default for the Carvel Package secret name.
   workspaces:
   - name: shared-data
-    description: |
-      Used to store the Conventions PodIntent and generated config files.
+    description: Used to store the Conventions PodIntent and generated config files.
   - name: overlay-data
-    description: |
-      Used to store generated YTT files.
+    description: Used to store generated YTT files.
   steps:
   - name: build-stateful-set
     image: harbor.lab:8443/tap-system/tap-packages@sha256:a12c23fa62746098beeba66bfa5d0ebfb04b54f90b17f74cefc9a75367726237

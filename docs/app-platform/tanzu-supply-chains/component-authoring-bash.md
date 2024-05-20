@@ -1,6 +1,8 @@
 # Tanzu Supply Chains Component Authoring
 
-Engineering a component requires thinking in layers. 
+Engineering a component requires thinking in layers.
+
+This example will show how to build and test a shell script to be used in a Tekton Task. If you code reaches the level of complexity that you need to run unit test, it's recommended to use a language such as Golang or Python.
 
 - At the bottom most layer you have the step within the Tekton task, which is a shell script. It's recommended to write the script in such a way that it can be executed and tested in isolation without the extra overhead of Tekton. 
 - Once the script is running then the Tekton wrapper can be place around it and it can be tested with a pipeline run.
@@ -25,7 +27,7 @@ template:
     - env:
       - name: JAVA_TOOL_OPTIONS
         value: -Dmanagement.endpoint.health.probes.add-additional-paths="true" -Dmanagement.health.probes.enabled="true" -Dserver.port="8080" -Dserver.shutdown.grace-period="24s"
-      image: harbor.lab:8443/tap-workload/friday-workload@sha256:cbd7c9d033f3b4a3ed5faf23a02e69bcfc9443ab405c49d9433d9af656b1eedd
+      image: private.reg/image:tag
 ...
 ```
 
@@ -48,7 +50,7 @@ The component will also take a single variable input of the workload name.
 
 Because the script will require a file structure to be layed out, a wrapper script is needed to first setup a simulated Tekton workspace with a dummy `appconfig.yaml` to replicate a convention component output.
 
-### Test wrapper
+### Simple test wrapper
 
 The outer test wrapper script needs to setup any necessary files and export all environment variables used by the task script.
 
@@ -56,7 +58,7 @@ File `app-config.yaml` is an abbreviated version of a convention component outpu
 
 Because the component has 2 outputs, 2 directories need to be passed into the script. `WORKSPACE_YAML` will be used for the `oci-yaml-files` output and `WORKSPACE_YTT` for the `oci-ytt-files` output.
 
-`test-task-script.sh`
+[test-task-script.sh](../../../code-snippits/component-authoring-example/test-task-script.sh)
 ```sh
 #!/bin/bash
 
@@ -74,7 +76,7 @@ template:
     - env:
       - name: JAVA_TOOL_OPTIONS
         value: -Dmanagement.endpoint.health.probes.add-additional-paths="true" -Dmanagement.health.probes.enabled="true" -Dserver.port="8080" -Dserver.shutdown.grace-period="24s"
-      image: harbor.lab:8443/tap-workload/friday-workload@sha256:cbd7c9d033f3b4a3ed5faf23a02e69bcfc9443ab405c49d9433d9af656b1eedd
+      image: private.reg/image:tag
 EOT
 
 export WORKSPACE_YAML=$TEMP_DIR_YAML
@@ -92,7 +94,7 @@ The task script expects 3 environment variables, which were set by the wrapper. 
 
 The output `appconfig.yaml` needs to be created with ytt because it will be referencing the values from the data source from the input `app-config.yaml`.
 
-`task-script.sh`
+[task-script.sh](../../../code-snippits/component-authoring-example/task-script.sh)
 ```sh
 #!/bin/bash
 
@@ -165,6 +167,9 @@ ls -l ${WORKSPACE_YAML}
 ls -l ${WORKSPACE_YTT}
 ```
 
+### More advanced unit testing
+
+Whilst outside the scope of this article, if more advanced testing of Bash scripts are needed, it's recommended to use the [BATS Framework](https://github.com/bats-core/bats-core), which will enable testing of individual functions with assertions.
 
 ## Injecting the script into the task
 
@@ -174,6 +179,7 @@ For this script to work the kube context be pointing to a TAP 1.9+ cluster with 
 
 The script below generates an overlay to inject the variables, gets an image ref from the running cluster that container the necessary dependencies, strips the script from `task.yaml` to remove extra overlays and re-creates `task.yaml` with the injected values.
 
+[render-task.sh](../../../code-snippits/component-authoring-example/render-task.sh)
 ```sh
 #!/bin/bash
 
@@ -201,7 +207,6 @@ spec:
       script: #@ data.values.script
 EOF
 `
-
 # Strip script to remove inline overlays
 sed -n -e '/  script:/{' -e 'p' -e ':a' -e 'N' -e '/  stepTemplate:/!ba' -e 's/.*\n//' -e '}' \
   -e 'p' ${SCRIPT_DIR}/task.yaml > ${TEMP_DIR}/task.yaml
@@ -209,4 +214,133 @@ sed -n -e '/  script:/{' -e 'p' -e ':a' -e 'N' -e '/  stepTemplate:/!ba' -e 's/.
 ytt -f ${TEMP_DIR}/task.yaml -f ${TEMP_DIR}/overlay.yaml \
   --data-value-file script=${SCRIPT_DIR}/task-script.sh \
   --data-value task_image=${TASK_IMAGE} > ${SCRIPT_DIR}/task.yaml
+```
+
+## Testing the Task
+
+To ensure the Tekton Task is setup correctly a dedicated Tekton pipeline can be built to run end-to-end tests.
+
+### Test Pipeline
+
+Similar to the test script the pipeline will run a task to populate the workspace, run the component task, then run a task that validate there is a line containing `kind: StatefulSet` in the correct file.
+
+[test-pipeline.yaml](../../../code-snippits/component-authoring-example/test-pipeline.yaml)
+```yaml
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: test-pipeline
+spec:
+  params:
+  - description: Name of the Workload. Used as a default for the Carvel Package secret name.
+    name: workload-name
+    type: string
+    default: "dummy"
+  tasks:
+    - name: workspace-setup
+      taskSpec:
+        steps:
+          - image: blank
+            script: |
+              #!/bin/sh
+
+              cat <<EOT >> $(workspaces.shared-data.path)/app-config.yaml
+              template:
+                spec:
+                  containers:
+                  - env:
+                    - name: JAVA_TOOL_OPTIONS
+                      value: -Dmanagement.endpoint.health.probes.add-additional-paths="true" -Dmanagement.health.probes.enabled="true" -Dserver.port="8080" -Dserver.shutdown.grace-period="24s"
+                    image: harbor.lab:8443/tap-workload/friday-workload@sha256:cbd7c9d033f3b4a3ed5faf23a02e69bcfc9443ab405c49d9433d9af656b1eedd
+              EOT
+      workspaces:
+        - name: store
+          workspace: shared-data
+
+    - name: app-config-stateful
+      runAfter:
+        - workspace-setup
+      params:
+      - name: workload-name
+        value: $(params.workload-name)
+      taskRef:
+        name: app-config-stateful
+      workspaces:
+        - name: shared-data
+          workspace: shared-data
+        - name: overlay-data
+          workspace: overlay-data
+    
+    - name: test-output
+      runAfter:
+        - app-config-stateful
+      taskSpec:
+        steps:
+          - image: blank
+            script: |
+              #!/bin/sh
+
+              grep -Fxq "kind: StatefulSet" $(workspaces.shared-data.path)/appconfig.yaml
+      workspaces:
+        - name: store
+          workspace: shared-data
+
+  workspaces:
+    - name: shared-data
+      description: Used to store the Conventions PodIntent and generated config files.
+    - name: overlay-data
+      description: Used to store generated YTT files.
+```
+
+### Setting the task images
+
+To populate the image tags run the following commands. It assumes that in `test-pipeline.yaml` the image section of each step is the first line of the step, by searching for `- image:`.
+
+```sh
+TASK_IMAGE=$(kubectl get task -n alm-catalog deployer -o jsonpath='{.spec.steps[0].image}')
+sed -i "s%- image: .*%- image: ${TASK_IMAGE}%" test-pipeline.yaml
+```
+
+### Creating a test PipelineRun
+
+The test PipelineRun will then run through each task.
+
+[test-pipeline-run.yaml](../../../code-snippits/component-authoring-example/test-pipeline-run.yaml)
+```yaml
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: test-pipeline-run
+spec:
+  pipelineRef:
+    name: test-pipeline
+  taskRunTemplate:
+    podTemplate:
+        securityContext:
+          fsGroup: 1000
+          runAsUser: 1001
+          runAsGroup: 1000
+  workspaces:
+    - name: shared-data
+      volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
+    - name: overlay-data
+      volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
+```
+
+## Creating the component
+
+
+```yaml
 ```

@@ -1,0 +1,44 @@
+---
+apiVersion: supply-chain.apps.tanzu.vmware.com/v1alpha1
+kind: Component
+metadata:
+  labels:
+    supply-chain.apps.tanzu.vmware.com/catalog: custom-components
+  name: app-config-stateful-set-0.0.1
+spec:
+  config:
+  - path: spec.workload-name
+    schema:
+      description: The name of the workload
+      type: string
+  description: Outputs hello <who-dis>
+  pipelineRun:
+    params:
+    - name: workload-name
+      value: $(workload.spec.workload-name)
+    pipelineRef:
+      name: hello-pipeline
+    taskRunTemplate:
+      podTemplate:
+        securityContext:
+          fsGroup: 1000
+          runAsGroup: 1000
+          runAsUser: 1001
+    workspaces:
+      - name: shared-data
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
+      - name: overlay-data
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
+---

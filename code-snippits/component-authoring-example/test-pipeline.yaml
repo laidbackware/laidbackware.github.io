@@ -1,0 +1,65 @@
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: test-pipeline
+spec:
+  params:
+  - description: Name of the Workload. Used as a default for the Carvel Package secret name.
+    name: workload-name
+    type: string
+    default: "dummy"
+  tasks:
+    - name: workspace-setup
+      taskSpec:
+        steps:
+          - image: harbor.lab:8443/tap-system/tap-packages@sha256:a12c23fa62746098beeba66bfa5d0ebfb04b54f90b17f74cefc9a75367726237
+            script: |
+              #!/bin/sh
+
+              cat <<EOT >> $(workspaces.shared-data.path)/app-config.yaml
+              template:
+                spec:
+                  containers:
+                  - env:
+                    - name: JAVA_TOOL_OPTIONS
+                      value: -Dmanagement.endpoint.health.probes.add-additional-paths="true" -Dmanagement.health.probes.enabled="true" -Dserver.port="8080" -Dserver.shutdown.grace-period="24s"
+                    image: harbor.lab:8443/tap-workload/friday-workload@sha256:cbd7c9d033f3b4a3ed5faf23a02e69bcfc9443ab405c49d9433d9af656b1eedd
+              EOT
+      workspaces:
+        - name: store
+          workspace: shared-data
+
+    - name: app-config-stateful
+      runAfter:
+        - workspace-setup
+      params:
+      - name: workload-name
+        value: $(params.workload-name)
+      taskRef:
+        name: app-config-stateful
+      workspaces:
+        - name: shared-data
+          workspace: shared-data
+        - name: overlay-data
+          workspace: overlay-data
+    
+    - name: test-output
+      runAfter:
+        - app-config-stateful
+      taskSpec:
+        steps:
+          - image: harbor.lab:8443/tap-system/tap-packages@sha256:a12c23fa62746098beeba66bfa5d0ebfb04b54f90b17f74cefc9a75367726237
+            script: |
+              #!/bin/sh
+
+              grep -Fxq "kind: StatefulSet" $(workspaces.shared-data.path)/appconfig.yaml
+      workspaces:
+        - name: store
+          workspace: shared-data
+
+  workspaces:
+    - name: shared-data
+      description: Used to store the Conventions PodIntent and generated config files.
+    - name: overlay-data
+      description: Used to store generated YTT files.

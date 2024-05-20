@@ -1,0 +1,31 @@
+---
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: test-pipeline-run
+spec:
+  pipelineRef:
+    name: test-pipeline
+  taskRunTemplate:
+    podTemplate:
+        securityContext:
+          fsGroup: 1000
+          runAsUser: 1001
+          runAsGroup: 1000
+  workspaces:
+    - name: shared-data
+      volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
+    - name: overlay-data
+      volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi
