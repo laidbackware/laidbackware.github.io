@@ -1,6 +1,6 @@
-# Run pre-start commands with Bosh `os-conf`
+# Run pre-start scripts with Bosh `runtime-config` and the `os-conf` release
 
-The procedure explains how to run a pre-start command on a Bosh instance group. For example to update a config file before a service starts.
+The procedure explains how to run pre-start commands on a Bosh instance group. For example to update a config file before a service starts.
 
 In this example it is used to set a flag in the Healthwatch v2 Grafana `defaults.ini` file before Grafana starts. Bosh `runtime-config` will run a pre-start script only on the grafana instance to modify the file before the service is allowed to start.
 
