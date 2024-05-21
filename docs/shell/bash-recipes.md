@@ -70,3 +70,13 @@ if ! [ -x "$(command -v ytt)" ]; then
   exit 1
 fi
 ```
+
+## Do something if command fails
+
+E.g. ff image is not in local registry copy image over.
+
+```sh
+if ! docker image inspect ${INSTALL_REGISTRY_HOSTNAME}/${INSTALL_REPO}/tap-packages:${TAP_VERSION} > /dev/null; then
+  imgpkg copy -b registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:${TAP_VERSION:-?} --to-repo ${INSTALL_REGISTRY_HOSTNAME:?}/${INSTALL_REPO:?}/tap-packages
+fi
+```
