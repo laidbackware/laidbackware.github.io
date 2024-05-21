@@ -4,6 +4,8 @@ The procedure explains how to run pre-start commands on a Bosh instance group. F
 
 In this example it is used to set a flag in the Healthwatch v2 Grafana `defaults.ini` file before Grafana starts. Bosh `runtime-config` will run a pre-start script only on the grafana instance to modify the file before the service is allowed to start.
 
+The reason for using Bosh `runtime-config` is so that Opsman cannot overwrite it during the next apply changes. Bosh `runtime-config` works as a template to apply over the top of any Opsman or Bosh deployment, meaning it is completely independent.
+
 ## Dependencies
 
 - This process assumes an install of Healthwatch v2 installed by Bosh via Opsman.
