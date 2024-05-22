@@ -16,10 +16,13 @@ nav:
     - Hello Component: ci-cd/tanzu-supply-chains/hello-component.md
     - Component authoring: ci-cd/tanzu-supply-chains/component-authoring-bash.md
     - Private CA Hack: ci-cd/tanzu-supply-chains/private-ca-hack.md
-- Tanzu Runtimes:
-  - Cloud Foundry:
+- Tanzu Platform:
+  - Intro: tanzu-platform/intro.md
+  - Cloud Foundry Runtime:
     - Bosh:
       - Pre-start script with runtime-config: cloud-foundry/bosh/run-pre-start-commands.md
+    - UAA:
+      - UAA Login with Golang CLI: cloud-foundry/uaa/login.md
 - Kubernetes: 
   - vSphere with Tanzu (TKGS):
     - Get full admin access: k8s/tkgs/admin-access.md

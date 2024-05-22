@@ -2,9 +2,9 @@
 
 The procedure explains how to run pre-start commands on a Bosh instance group. For example to update a config file before a service starts.
 
-In this example it is used to set a flag in the Healthwatch v2 Grafana `defaults.ini` file before Grafana starts. Bosh `runtime-config` will run a pre-start script only on the grafana instance to modify the file before the service is allowed to start.
+In this example it is used to set a flag in the Healthwatch v2 Grafana `defaults.ini` file before Grafana starts. Bosh [runtime-config](https://bosh.io/docs/runtime-config/) will run a pre-start script only on the grafana instance to modify the file before the service is allowed to start.
 
-The reason for using Bosh `runtime-config` is so that Opsman cannot overwrite it during the next apply changes. Bosh `runtime-config` works as a template to apply over the top of any Opsman or Bosh deployment, meaning it is completely independent.
+The reason for using Bosh `runtime-config` is so that Opsman cannot overwrite it during the next apply changes. Bosh `runtime-config` works as a template to apply over the top of any Opsman or Bosh deployment, meaning it is completely independent. It needs to be applied once and will continue to work for the life of the Bosh director.
 
 ## Dependencies
 
@@ -19,6 +19,8 @@ The reason for using Bosh `runtime-config` is so that Opsman cannot overwrite it
 2. Upload the the `os-conf` Bosh release to the director
 3. Create a `runtime-config` with a pre-start script
 4. Trigger a deployment to have the `runtime-config` injected into the deployment
+
+Note that any `os-conf` job can only be run once per instance. This means that only one pre-start script can be run. This is something to consider if more than one modification is needed, as they will need to be grouped together in the same `runtime-config`.
 
 
 ## Steps
@@ -50,7 +52,7 @@ eval "$(om bosh-env)"
 
 #### Connect to the Bosh Director via Opsman proxy
 
-Export the Bosh variables in the shell session, including the Opsman SSH key for proxying buy running, substituting in the path to the opsman SSH private key:
+Export the Bosh variables in the shell session, including the Opsman SSH key for proxying buy running, substituting in the path to the Opsman SSH private key:
 
 ```sh
 eval "$(om bosh-env --ssh-private-key=<path-to-opsman-ssh-key>)"
@@ -134,9 +136,9 @@ releases:
   version: latest
 ```
 
-`addon` defines a list of jobs to add to instances. The name of the addon is set to `grafana-update`.
+`addon` defines a list of jobs to add to instances. The name of the add-on is set to `grafana-update`.
 
-`include` specifies the `grafana` instance_group, so that this addon will only apply to the grafana instance groups.
+`include` specifies the `grafana` instance_group, so that this add-on will only apply to the grafana instance groups. Other [placement rules](https://bosh.io/docs/runtime-config/#placement-rules) are available.
 
 ```yaml
 addons:
@@ -148,7 +150,7 @@ addons:
 
 `jobs` includes a single job. 
 
-The name of the job has to match on of the avaiable [os-conf jobs](https://bosh.io/releases/github.com/cloudfoundry/os-conf-release?version=22.2.1).
+The `name` of the job has to match on of the available [os-conf jobs](https://bosh.io/releases/github.com/cloudfoundry/os-conf-release?version=22.2.1). In this case `pre-start-script` is used.
 
 The `pre-start-script` will run after releases have been loaded, but before monit starts any services. See [job lifecycle](https://bosh.io/docs/job-lifecycle/) for more details.
 
