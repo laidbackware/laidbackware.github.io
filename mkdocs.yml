@@ -19,6 +19,8 @@ nav:
 - Tanzu Platform:
   - Intro: tanzu-platform/intro.md
   - Cloud Foundry Runtime:
+    - App dev:
+      - App Lifecycle Management: cloud-foundry/app-dev/app-lifecycle.md
     - Bosh:
       - Pre-start script with runtime-config: cloud-foundry/bosh/run-pre-start-commands.md
     - UAA:
