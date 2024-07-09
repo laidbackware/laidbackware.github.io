@@ -38,6 +38,14 @@ E.g. return value after the first occurrence of `name: ` from a file on Linux.
 sed -n -e '/name/ {s/.*: *//p;q}' /$HOME/.kube/config
 ```
 
+### Replace text in a line, keeping before the match
+
+E.g. 
+
+```sh
+sed -r 's/(^.*)cheese/\1mice/'
+```
+
 ## Remove all lines starting with string
 
 E.g. remove all lines starting with "#@".

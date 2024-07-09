@@ -63,8 +63,42 @@ At a very high level the [app shutdown process](https://docs.cloudfoundry.org/de
 
 Should there be the need to extend the time that apps are given to shutdown this can be [set system wide](https://docs.cloudfoundry.org/devguide/deploy-apps/app-lifecycle.html#shutdown:~:text=containers.graceful_shutdown_interval_in_seconds) but will have the effect that Diego maintenance events could take longer.
 
-Each language will have a different way to respond `SIGTERM`. Here is a [Java example](https://adambien.blog/roller/abien/entry/sigterm_sigint_sigkill_and_java).
+Each language will have a different way to respond `SIGTERM`.
+
+### Java shutdown
+
+Java allows the developer to configure [pre-shutdown hooks](https://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html#addShutdownHook(java.lang.Thread)), to insert logic into the shutdown process.
+
+The default behaviour in Java is as follows:
+
+- JVM receives `SIGTERM`
+- All [pre-shutdown hooks](https://docs.oracle.com/javase/7/docs/api/java/lang/Runtime.html#addShutdownHook(java.lang.Thread)) are triggered (if any are defined)
+- The JVM will then wait for all [non-daemon threads](https://docs.oracle.com/en/java/javase/12/docs/api/java.base/java/lang/Thread.html) to complete before exiting
+
+The last point is critical, as the JVM will not exit until all theads complete, meaning the app should be designed to take this into account.
+
+#### Spring annotation
+
+Spring apps can use the [@pre-destroy](https://www.baeldung.com/spring-postconstruct-predestroy#preDestroy) annoation to ensure a function is called before exiting.
+
+For Java 9+ the following dependency needs to be added.
+
+```
+<dependency>
+    <groupId>javax.annotation</groupId>
+    <artifactId>javax.annotation-api</artifactId>
+    <version>1.3.2</version>
+</dependency>
+```
+
+### Detecting a SIGKILL
+
+If the following line appears in app logs, then it is proof that an app was forcully shutdown by the system after the app did not respond properly to a `SIGTERM`.
+
+```
+OUT Exit status 137 (exceeded 10s graceful shutdown interval)
+```
 
 ## Testing app behaviour
 
-Should an app team need to test the behaviour to ensure the stop and start events are transparent to a client it is recommended to run `cf restart --strategy rolling` in a dev environment whilst the app is under load. If the app is coded, configured and scaled correct, then the operation will be invisible to the client.
+Should an app team need to test the behaviour to ensure the stop and start events are transparent to a client it is recommended to run `cf restart --strategy rolling` in a dev environment whilst the app is under load. If the app is coded, configured and scaled correctly, then the operation will be invisible to the client.
