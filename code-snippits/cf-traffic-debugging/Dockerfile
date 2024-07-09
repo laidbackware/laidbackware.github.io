@@ -23,7 +23,7 @@ rm -f /usr/local/apache2/htdocs/index.html
 httpd-foreground &
 
 while true; do 
-  tcptraceroute \${ENDPOINT} \${ENDPOINT_TCP_PORT} | tee -a /usr/local/apache2/htdocs/index.html
+  tcptraceroute \${ENDPOINT} \${ENDPOINT_TCP_PORT} 2>&1 | tee -a /usr/local/apache2/htdocs/index.html
   echo "</br></br>" >> /usr/local/apache2/htdocs/index.html
   sleep 5
 done

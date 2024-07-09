@@ -21,6 +21,7 @@ nav:
   - Cloud Foundry Runtime:
     - App dev:
       - App Lifecycle Management: cloud-foundry/app-dev/app-lifecycle.md
+      - Debugging egress traffic: cloud-foundry/app-dev/debugging-traffic.md
     - Bosh:
       - Pre-start script with runtime-config: cloud-foundry/bosh/run-pre-start-commands.md
     - UAA:
