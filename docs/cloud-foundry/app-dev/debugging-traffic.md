@@ -75,7 +75,6 @@ export CF_DOCKER_PASSWORD=<my-registry-password>
 cf push tcp-test --docker-image my-repo/tcp-tst:latest \
   --docker-username <my-registry-username> \
   --no-start
-cf push tcp-test --docker-image harbor.nas.local:8443/cf/tst:latest --no-start
 
 cf set-env tcp-test ENDPOINT google.com
 cf set-env tcp-test ENDPOINT_TCP_PORT 443
