@@ -46,7 +46,8 @@ This step upload the stemcell to the new datastore, re-create the VMs with ephem
 
 ### Tidy Up
 
-- On the source cluster remove the Bosh director VM from the inventory
+- On the source cluster edit the Bosh director VM to detach (not delete) the presistent disk
+- Delete the source Bosh director VM
 - Update the persistent disk and ephemeral disk on the Bosh director "vCenter Config" tab to the target datastore
 - On the "Director Config" tab check `Recreate VMs deployed by the BOSH Director`
 - Apply changes to move the Bosh director and all non-service instance VMs to the new disk
