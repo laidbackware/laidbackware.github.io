@@ -33,7 +33,9 @@ This step upload the stemcell to the new datastore, re-create the VMs with ephem
 
 - Add the target cluster as an availability zone (if necessary add the target vCenter, taking care to specify the correct datastores)
 - Edit the required networks on the Bosh "Create Networks" page, to add the new availability zone
-- On the Opsman VM edit `/var/tempest/workspaces/default/deployments/bosh-state.json` and remove the `stemcells` section to force a re-upload
+- On the Opsman VM edit `/var/tempest/workspaces/default/deployments/bosh-state.json`
+  - Take a backup of the file
+  - Remove the `stemcells` section to force a re-upload on the next apply changes
 - On the "Director Config" tab check `Recreate VMs deployed by the BOSH Director` (this gets cleared after the previous successful apply changes).
 - (If a static IP is define on the Harbor deployment) Remove it by setting it to blank.
 - Enable [Opsman Advanced mode](https://knowledge.broadcom.com/external/article?articleNumber=293516)
@@ -50,4 +52,4 @@ This step upload the stemcell to the new datastore, re-create the VMs with ephem
 - Delete the source Bosh director VM
 - Update the persistent disk and ephemeral disk on the Bosh director "vCenter Config" tab to the target datastore
 - On the "Director Config" tab check `Recreate VMs deployed by the BOSH Director`
-- Apply changes to move the Bosh director and all non-service instance VMs to the new disk
+- Apply changes to move the Bosh director and all non-service instance VMs to the target disk
