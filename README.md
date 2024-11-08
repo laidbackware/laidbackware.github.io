@@ -3,8 +3,7 @@
 ## Dependencies
 
 ```sh
-pip install mkdocs-minify-plugin
-pip install mkdocs-material
+pip install mkdocs mkdocs-minify-plugin mkdocs-material
 ```
 
 ## Publish Manually

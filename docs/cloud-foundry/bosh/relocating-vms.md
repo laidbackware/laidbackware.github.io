@@ -12,9 +12,9 @@ This process has been tested using the Harbor tile and has not been tested again
 - This process was tested using Opsman 3.0.33.
 - It is strongly recommended to use BBR to backup the director and any tiles which will be changed
 - There must be a shared datastore that exists on both the source and target cluster
-  - Both source and target datastore MUST have the SAME name
+    - Both source and target datastore MUST have the SAME name
 - The network must be available on the source and target clusters
-  - Both source and target port group MUST have the SAME name.
+    - Both source and target port group MUST have the SAME name.
 - Tested with NSX being disabled in the vCenter config. If NSX is enabled, then extra testing would be required!
 
 
@@ -22,7 +22,7 @@ This process has been tested using the Harbor tile and has not been tested again
 
 ### Move the disks to the shared datastore
 
-This step upload the stemcell to the new datastore, re-create the VMs with ephemeral snapshots from the new datastore, attach new disks from the new datastores to copy persistent data and finally detach the source persistent disk.
+This step will upload the stemcell to the new datastore, re-create the VMs with ephemeral snapshots from the new datastore, attach new disks from the new datastores to copy persistent data and finally detach the source persistent disk.
 
 - Update the persistent disk and ephemeral disk on the Bosh director "vCenter Config" tab to the migration datastore
 - On the "Director Config" tab check `Recreate VMs deployed by the BOSH Director`
@@ -31,11 +31,13 @@ This step upload the stemcell to the new datastore, re-create the VMs with ephem
 
 ### Recreate all the VMs on the target cluster
 
+This step will force all VMs to be re-created on the target vSphere cluster.
+
 - Add the target cluster as an availability zone (if necessary add the target vCenter, taking care to specify the correct datastores)
 - Edit the required networks on the Bosh "Create Networks" page, to add the new availability zone
 - On the Opsman VM edit `/var/tempest/workspaces/default/deployments/bosh-state.json`
-  - Take a backup of the file
-  - Remove the `stemcells` section to force a re-upload on the next apply changes
+    - Take a backup of the file
+    - Remove the `stemcells` section to force a re-upload on the next apply changes
 - On the "Director Config" tab check `Recreate VMs deployed by the BOSH Director` (this gets cleared after the previous successful apply changes).
 - (If a static IP is define on the Harbor deployment) Remove it by setting it to blank.
 - Enable [Opsman Advanced mode](https://knowledge.broadcom.com/external/article?articleNumber=293516)
@@ -47,6 +49,8 @@ This step upload the stemcell to the new datastore, re-create the VMs with ephem
 
 
 ### Tidy Up
+
+This step will remove the orginal Bosh director VM and move data to the target datastore.
 
 - On the source cluster edit the Bosh director VM to detach (not delete) the presistent disk
 - Delete the source Bosh director VM

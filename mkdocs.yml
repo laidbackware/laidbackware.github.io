@@ -24,6 +24,7 @@ nav:
       - Debugging egress traffic: cloud-foundry/app-dev/debugging-traffic.md
     - Bosh:
       - Pre-start script with runtime-config: cloud-foundry/bosh/run-pre-start-commands.md
+      - Relocate vSphere VMs into another cluster: cloud-foundry/bosh/relocating-vms.md
     - UAA:
       - UAA Login with Golang CLI: cloud-foundry/uaa/login.md
 - Kubernetes: 
@@ -77,6 +78,7 @@ markdown_extensions:
   - footnotes
   - admonition
   - meta
+  # - def_list
   - tables
   - toc:
       permalink: true
@@ -106,3 +108,5 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
+  - pymdownx.tasklist:
+      custom_checkbox: true
