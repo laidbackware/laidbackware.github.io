@@ -27,6 +27,8 @@ nav:
       - Relocate vSphere VMs into another cluster: cloud-foundry/bosh/relocating-vms.md
     - UAA:
       - UAA Login with Golang CLI: cloud-foundry/uaa/login.md
+    - GemFire:
+      - Monitoring replication: cloud-foundry/gemfire/gemfire-dashboard.md
 - Kubernetes: 
   - vSphere with Tanzu (TKGS):
     - Get full admin access: k8s/tkgs/admin-access.md
